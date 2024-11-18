@@ -6,33 +6,121 @@
   <script id="challenge">
     // 👉 CHALLENGE 1
     function profileActivation(profile, reason) {
-
+      if (profile.active) {
+        if (!reason) {
+            // Case: Active profile with no reason provided for deactivation
+            return "confirm status manually";
+        }
+        // Case: Deactivate profile and assign the reason
+        profile.active = false;
+        profile.reason = reason;
+    } else {
+        // Case: Activate profile and remove the reason
+        profile.active = true;
+        delete profile.reason;
     }
+    return profile;
+}
+    
 
     // 👉 CHALLENGE 2
     function mineSweeper(grid, x, y) {
+ // Adjust the coordinates for 0-based indexing
+ const adjustedX = x - 1;
+    const adjustedY = y - 1;
 
+    // Check if coordinates are out of bounds
+    if (adjustedX < 0 || adjustedX >= grid.length || adjustedY < 0 || adjustedY >= grid[0].length) {
+        return "invalid coordinates";
+    }
+
+    // Get the value at the specified coordinates
+    const cell = grid[adjustedY][adjustedX];
+
+    // Determine the result based on the cell value
+    if (cell === "🟥") {
+        return "🟥 💀";
+    } else if (cell === "🟦") {
+        return "🟦 🥳";
+    } else {
+        return "invalid cell";
+    }
     }
 
     // 👉 CHALLENGE 3
     function booleanize(obj) {
+ // Check if any property name exceeds 9 characters
+ for (let key in obj) {
+    if (key.length > 9) {
+      return "shorten all prop names to 9 chars or less";
+    }
+  }
 
+  // Loop over the object and transform properties as needed
+  for (let key in obj) {
+    if (obj[key] === 0) {
+      obj[key] = false;
+    } else if (obj[key] === 1) {
+      obj[key] = true;
+    } else if (obj[key] === null) {
+      delete obj[key];
+    }
+  }
+
+  return obj;
     }
 
     // 👉 CHALLENGE 4
     function scrub(text, forbidden) {
+ // Return the original text if empty or no forbidden words
+ if (!text || forbidden.length === 0) return text;
 
+// Split the text into words
+let words = text.split(" ");
+
+// Replace forbidden words with 'x' of equal length
+let scrubbed = words.map(word => {
+    return forbidden.includes(word) ? "x".repeat(word.length) : word;
+});
+
+// Join the words back into a single string
+return scrubbed.join(" ");
     }
 
     // 👉 CHALLENGE 5 (bonus, NOT graded)
     function normalizePhoneNumber(num) {
-
+    // Ensure the input is exactly 10 digits
+    if (num.length !== 10 || !/^\d{10}$/.test(num)) {
+        throw new Error("Invalid input: must be a 10-digit number.");
+    }
+    
+    // Format the number into "(XXX) XXX-XXXX"
+    return `(${num.slice(0, 3)}) ${num.slice(3, 6)}-${num.slice(6)}`;
     }
 
     // 👉 CHALLENGE 6 (bonus, NOT graded)
     function diceRolls() {
+      let throws = 0; // Count total rolls
+    let counter = 0; // Count consecutive sixes
 
+    while (true) {
+        // Simulate a die roll: random number between 1 and 6
+        let roll = Math.floor(Math.random() * 6) + 1;
+        throws++;
+
+        if (roll === 6) {
+            counter++; // Increment counter if roll is six
+            if (counter === 3) {
+                break; // Stop if three consecutive sixes are achieved
+            }
+        } else {
+            counter = 0; // Reset counter if roll is not six
+        }
     }
+
+    return throws; // Return total rolls
+    }
+
 
     // 🧪 DO NOT make any changes below this line ===================
     globalThis.challengeVersion = 1
